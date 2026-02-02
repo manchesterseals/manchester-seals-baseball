@@ -55,6 +55,7 @@ export class RosterComponent implements OnInit {
   loadRosterFromMongoDB() {
     this.isLoadingFromMongoDB = true;
     this.mongoDBPlayers = [];
+    this.updateTrigger++;
     this.cdr.detectChanges();
     this.rosterService.getAllRoster().subscribe({
       next: (response: any) => {
@@ -72,12 +73,14 @@ export class RosterComponent implements OnInit {
             console.log('✓ Loaded roster data');
           }
         }
+        this.updateTrigger++;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('✗ Error loading roster from MongoDB:', error);
         this.isLoadingFromMongoDB = false;
         this.mongoDBPlayers = [];
+        this.updateTrigger++;
         this.cdr.detectChanges();
       }
     });
@@ -89,6 +92,7 @@ export class RosterComponent implements OnInit {
   filterByPosition(position: string) {
     this.isLoadingFromMongoDB = true;
     this.mongoDBPlayers = [];
+    this.updateTrigger++;
     this.cdr.detectChanges();
     this.rosterService.getRosterByPosition(position).subscribe({
       next: (response: any) => {
@@ -103,12 +107,14 @@ export class RosterComponent implements OnInit {
             console.log(`✓ Found ${this.mongoDBPlayers.length} player(s) with position: ${position}`);
           }
         }
+        this.updateTrigger++;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('✗ Error filtering roster by position:', error);
         this.isLoadingFromMongoDB = false;
         this.mongoDBPlayers = [];
+        this.updateTrigger++;
         this.cdr.detectChanges();
       }
     });
@@ -120,6 +126,7 @@ export class RosterComponent implements OnInit {
   filterByNumber(number: string) {
     this.isLoadingFromMongoDB = true;
     this.mongoDBPlayers = [];
+    this.updateTrigger++;
     this.cdr.detectChanges();
     this.rosterService.getRosterByNumber(number).subscribe({
       next: (response: any) => {
@@ -134,12 +141,14 @@ export class RosterComponent implements OnInit {
             console.log(`✓ Found ${this.mongoDBPlayers.length} player(s) with number: ${number}`);
           }
         }
+        this.updateTrigger++;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('✗ Error filtering roster by number:', error);
         this.isLoadingFromMongoDB = false;
         this.mongoDBPlayers = [];
+        this.updateTrigger++;
         this.cdr.detectChanges();
       }
     });
