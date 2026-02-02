@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone, ApplicationRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PLAYERS } from '../common/config_data';
 import { RosterService, RosterEntry } from '../common/roster-api.service';
+import { ExternalApiService } from '../common/external-api.service';
 
 interface Player {
   name: string;
@@ -21,6 +22,9 @@ export class RosterComponent implements OnInit {
   players: Player[] = PLAYERS;
   isLoadingFromMongoDB = false;
   mongoDBPlayers: RosterEntry[] = [];
+  isLoadingFromExternal = false;
+  externalPlayers: any[] = [];
+  updateTrigger = 0; // Force template update
 
   searchTerm: string = '';
   sortKey: keyof Player | null = null;
@@ -33,7 +37,13 @@ export class RosterComponent implements OnInit {
   editPlayer: Player | null = null;
   editPlayerOriginalName: string | null = null;
 
-  constructor(private rosterService: RosterService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private rosterService: RosterService, 
+    private externalApiService: ExternalApiService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
+    private appRef: ApplicationRef
+  ) {}
 
   ngOnInit() {
     this.loadRosterFromMongoDB();
@@ -45,6 +55,7 @@ export class RosterComponent implements OnInit {
   loadRosterFromMongoDB() {
     this.isLoadingFromMongoDB = true;
     this.mongoDBPlayers = [];
+    this.updateTrigger++;
     this.cdr.detectChanges();
     this.rosterService.getAllRoster().subscribe({
       next: (response: any) => {
@@ -62,12 +73,14 @@ export class RosterComponent implements OnInit {
             console.log('✓ Loaded roster data');
           }
         }
+        this.updateTrigger++;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('✗ Error loading roster from MongoDB:', error);
         this.isLoadingFromMongoDB = false;
         this.mongoDBPlayers = [];
+        this.updateTrigger++;
         this.cdr.detectChanges();
       }
     });
@@ -79,6 +92,7 @@ export class RosterComponent implements OnInit {
   filterByPosition(position: string) {
     this.isLoadingFromMongoDB = true;
     this.mongoDBPlayers = [];
+    this.updateTrigger++;
     this.cdr.detectChanges();
     this.rosterService.getRosterByPosition(position).subscribe({
       next: (response: any) => {
@@ -93,12 +107,14 @@ export class RosterComponent implements OnInit {
             console.log(`✓ Found ${this.mongoDBPlayers.length} player(s) with position: ${position}`);
           }
         }
+        this.updateTrigger++;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('✗ Error filtering roster by position:', error);
         this.isLoadingFromMongoDB = false;
         this.mongoDBPlayers = [];
+        this.updateTrigger++;
         this.cdr.detectChanges();
       }
     });
@@ -110,6 +126,7 @@ export class RosterComponent implements OnInit {
   filterByNumber(number: string) {
     this.isLoadingFromMongoDB = true;
     this.mongoDBPlayers = [];
+    this.updateTrigger++;
     this.cdr.detectChanges();
     this.rosterService.getRosterByNumber(number).subscribe({
       next: (response: any) => {
@@ -124,12 +141,101 @@ export class RosterComponent implements OnInit {
             console.log(`✓ Found ${this.mongoDBPlayers.length} player(s) with number: ${number}`);
           }
         }
+        this.updateTrigger++;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('✗ Error filtering roster by number:', error);
         this.isLoadingFromMongoDB = false;
         this.mongoDBPlayers = [];
+        this.updateTrigger++;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  /**
+   * Load roster data from external REST service (localhost:8080)
+   */
+  loadRosterFromExternal() {
+    this.isLoadingFromExternal = true;
+    this.externalPlayers = [];
+    this.cdr.detectChanges();
+    
+    this.externalApiService.getRoster().subscribe({
+      next: (response: any) => {
+        console.log('External API Response:', response);
+        this.isLoadingFromExternal = false;
+        
+        // Handle response - flexible structure
+        const data = Array.isArray(response) ? response : (response?.data ? response.data : []);
+        if (data && data.length > 0) {
+          this.externalPlayers = [...data];
+          console.log(`✓ Loaded ${this.externalPlayers.length} roster entries from external service`);
+        } else {
+          console.log('⚠ No data received from external service');
+        }
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('✗ Error loading roster from external service:', error);
+        console.error('Make sure the service is running at http://localhost:8080');
+        this.isLoadingFromExternal = false;
+        this.externalPlayers = [];
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  /**
+   * Generic method to fetch data from external service
+   */
+  fetchFromExternal(endpoint: string) {
+    // Validate endpoint
+    if (!endpoint || endpoint.trim() === '') {
+      console.error('⚠ Please enter an endpoint');
+      return;
+    }
+    
+    // Ensure endpoint starts with /
+    const cleanEndpoint = endpoint.trim().startsWith('/') ? endpoint.trim() : `/${endpoint.trim()}`;
+    
+    console.log(`Fetching from ${cleanEndpoint}...`);
+    console.log('BEFORE: isLoadingFromExternal=', this.isLoadingFromExternal);
+    
+    this.isLoadingFromExternal = true;
+    this.externalPlayers = [];
+    
+    console.log('AFTER SET TRUE: isLoadingFromExternal=', this.isLoadingFromExternal);
+    this.updateTrigger++;
+    this.cdr.detectChanges();
+    
+    this.externalApiService.getData(cleanEndpoint).subscribe({
+      next: (response: any) => {
+        console.log(`✓ API Response from ${cleanEndpoint}:`, response);
+        
+        const data = Array.isArray(response) ? response : (response?.data ? response.data : response);
+        console.log('Processed data:', data);
+        
+        // Set data first
+        this.externalPlayers = Array.isArray(data) ? [...data] : [data];
+        console.log('Set externalPlayers to:', this.externalPlayers);
+        
+        // Set loading to false
+        this.isLoadingFromExternal = false;
+        this.updateTrigger++;
+        console.log('RESPONSE HANDLER: isLoadingFromExternal set to FALSE:', this.isLoadingFromExternal);
+        
+        // Force change detection
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error(`✗ Error fetching from ${cleanEndpoint}:`, error);
+        this.isLoadingFromExternal = false;
+        this.externalPlayers = [];
+        this.updateTrigger++;
+        this.cdr.markForCheck();
         this.cdr.detectChanges();
       }
     });
