@@ -1,0 +1,151 @@
+<div class="roster-container">
+  <header class="roster-header">
+    <img src="/joe_hanily.jpeg" alt="Joseph Hanily" class="header-image" />
+    <h1>Manchester Seals Baseball</h1>
+  </header>
+  
+  <!-- MongoDB Data Section -->
+  <section class="mongodb-section">
+    <h2>MongoDB Roster Data</h2>
+    <div class="mongodb-controls">
+      <button class="filter-btn" (click)="loadRosterFromMongoDB()" [disabled]="isLoadingFromMongoDB">
+        {{ isLoadingFromMongoDB ? 'Loading...' : 'Refresh from MongoDB' }}
+      </button>
+      <button class="filter-btn" (click)="filterByPosition('Pitcher')">Pitchers</button>
+      <button class="filter-btn" (click)="filterByPosition('Outfield')">Outfielders</button>
+      <button class="filter-btn" (click)="loadRosterFromMongoDB()">All Players</button>
+    </div>
+    
+    <div *ngIf="isLoadingFromMongoDB" class="loading-message">Loading roster data...</div>
+    
+    <div *ngIf="!isLoadingFromMongoDB && mongoDBPlayers && mongoDBPlayers.length > 0" class="mongodb-table">
+      <table class="roster-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Number</th>
+            <th>MongoDB ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let player of mongoDBPlayers">
+            <td>{{ player.name }}</td>
+            <td>{{ player.position }}</td>
+            <td>{{ player.number }}</td>
+            <td class="mongo-id">{{ player._id }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="record-count">Total: {{ mongoDBPlayers.length }} player(s)</p>
+    </div>
+    
+    <div *ngIf="!isLoadingFromMongoDB && (!mongoDBPlayers || mongoDBPlayers.length === 0)" class="no-data-message">
+      No data available. Click "Refresh from MongoDB" to load.
+    </div>
+  </section>
+  
+  <!-- Local Data Section -->
+  <h2>Team Roster</h2>
+  <div class="roster-controls">
+    <input class="search-input" placeholder="Search players" [(ngModel)]="searchTerm" />
+    <button class="add-btn" (click)="toggleAddForm()">{{ showAddForm ? 'Cancel' : 'Add Player' }}</button>
+  </div>
+  <table class="roster-table">
+    <thead>
+      <tr>
+        <th (click)="toggleSort('name')">Name <span *ngIf="sortKey==='name'">{{ sortAsc ? '▲' : '▼' }}</span></th>
+        <th (click)="toggleSort('position')">Position <span *ngIf="sortKey==='position'">{{ sortAsc ? '▲' : '▼' }}</span></th>
+        <th (click)="toggleSort('number')">Number <span *ngIf="sortKey==='number'">{{ sortAsc ? '▲' : '▼' }}</span></th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let player of displayedPlayers">
+        <td>{{ player.name }}</td>
+        <td>{{ player.position }}</td>
+        <td>{{ player.number }}</td>
+        <td>
+          <button class="edit-btn" (click)="openEditModal(player)">Edit</button>
+          <button class="delete-btn" (click)="showDeleteConfirmModal(player.name)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="add-form-modal" *ngIf="showAddForm" class="modal-overlay">
+    <div class="modal-content add-modal">
+      <h3>Add New Player</h3>
+      <div class="form-container">
+        <div class="form-group">
+          <label>Name:</label>
+          <input type="text" [(ngModel)]="newPlayer.name" placeholder="Player name" />
+        </div>
+        <div class="form-group">
+          <label>Position:</label>
+          <select [(ngModel)]="newPlayer.position">
+            <option value="">Select Position</option>
+            <option value="Manager">Manager</option>
+            <option value="First Base">First Base</option>
+            <option value="Second Base">Second Base</option>
+            <option value="Third Base">Third Base</option>
+            <option value="Short Stop">Short Stop</option>
+            <option value="Catcher">Catcher</option>
+            <option value="Pitcher">Pitcher</option>
+            <option value="Coach">Coach</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Number:</label>
+          <input type="text" [(ngModel)]="newPlayer.number" placeholder="Jersey number" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="submit-btn" (click)="addPlayer()">Add</button>
+        <button class="cancel-btn" (click)="toggleAddForm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showDeleteConfirm" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Confirm Delete</h3>
+      <p>Are you sure?</p>
+      <div class="modal-actions">
+        <button class="modal-ok-btn" (click)="confirmDelete()">OK</button>
+        <button class="modal-cancel-btn" (click)="cancelDelete()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <div class="edit-form-modal" *ngIf="showEditForm && editPlayer" class="modal-overlay">
+    <div class="modal-content add-modal">
+      <h3>Edit Player</h3>
+      <div class="form-container">
+        <div class="form-group">
+          <label>Name:</label>
+          <input type="text" [(ngModel)]="editPlayer.name" placeholder="Player name" />
+        </div>
+        <div class="form-group">
+          <label>Position:</label>
+          <select [(ngModel)]="editPlayer.position">
+            <option value="">Select Position</option>
+            <option value="Manager">Manager</option>
+            <option value="First Base">First Base</option>
+            <option value="Second Base">Second Base</option>
+            <option value="Third Base">Third Base</option>
+            <option value="Short Stop">Short Stop</option>
+            <option value="Catcher">Catcher</option>
+            <option value="Pitcher">Pitcher</option>
+            <option value="Coach">Coach</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Number:</label>
+          <input type="text" [(ngModel)]="editPlayer.number" placeholder="Jersey number" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="submit-btn" (click)="updatePlayer()">Update</button>
+        <button class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

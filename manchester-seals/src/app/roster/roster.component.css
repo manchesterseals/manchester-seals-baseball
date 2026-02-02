@@ -1,0 +1,437 @@
+.roster-container {
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.roster-header {
+  background: #000000;
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.header-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+}
+
+.baseball-icon {
+  width: 80px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.roster-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.roster-container h2 {
+  font-size: 24px;
+  margin: 0 20px;
+  padding: 20px 0 10px 0;
+  border-bottom: 2px solid #4CAF50;
+}
+
+.roster-table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px;
+}
+
+.roster-table th,
+.roster-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.roster-table th {
+  background-color: #5a8fa8;
+  color: white;
+}
+
+.roster-table th {
+  cursor: pointer;
+}
+
+.roster-controls {
+  margin: 12px 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 1;
+  max-width: 320px;
+}
+
+.add-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #45a049;
+}
+
+.roster-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.roster-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.delete-btn {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #b71c1c;
+}
+
+.edit-btn {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin-right: 5px;
+}
+
+.edit-btn:hover {
+  background-color: #1565c0;
+}
+
+.add-form {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 20px;
+  margin: 20px;
+  max-width: 400px;
+}
+
+.add-form h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.add-form-modal.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.add-modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 90%;
+}
+
+.add-modal h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.form-container {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.add-modal .form-group {
+  display: contents;
+}
+
+.add-modal .form-group label {
+  text-align: left;
+  font-weight: 500;
+  align-self: center;
+}
+
+.add-modal .form-group input,
+.add-modal .form-group select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.add-modal .form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  flex: 1;
+}
+
+.submit-btn:hover {
+  background-color: #45a049;
+}
+
+.cancel-btn {
+  background-color: #808080;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  flex: 1;
+}
+
+.cancel-btn:hover {
+  background-color: #696969;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 300px;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: #333;
+}
+
+.modal-content p {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-ok-btn {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  flex: 1;
+}
+
+.modal-ok-btn:hover {
+  background-color: #b71c1c;
+}
+
+.modal-cancel-btn {
+  background-color: #808080;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  flex: 1;
+}
+
+.modal-cancel-btn:hover {
+  background-color: #696969;
+}
+
+.edit-form-modal.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+/* MongoDB Section Styles */
+.mongodb-section {
+  background-color: #f5f5f5;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 8px;
+  border-left: 4px solid #13aa52;
+}
+
+.mongodb-section h2 {
+  margin-top: 0;
+  color: #13aa52;
+  border-bottom: none;
+  padding: 0 0 10px 0;
+  margin-bottom: 15px;
+}
+
+.mongodb-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  background-color: #13aa52;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.filter-btn:hover {
+  background-color: #0e8b42;
+}
+
+.filter-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.mongodb-table {
+  margin: 15px 0;
+}
+
+.mongodb-table .roster-table {
+  margin: 0;
+}
+
+.mongo-id {
+  font-size: 12px;
+  color: #666;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.loading-message {
+  padding: 20px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.no-data-message {
+  padding: 20px;
+  background-color: #fff3e0;
+  color: #f57c00;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.record-count {
+  text-align: right;
+  color: #666;
+  font-size: 14px;
+  margin-top: 10px;
+  padding-right: 10px;
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Joe Hanily",
+    "position": "Manager",
+    "number": "20"
+  },
+  {
+    "name": "Sam Smith",
+    "position": "Pitcher",
+    "number": "12"
+  },
+  {
+    "name": "Tom Johnson",
+    "position": "Catcher",
+    "number": "8"
+  },
+  {
+    "name": "Alex Rivera",
+    "position": "First Base",
+    "number": "5"
+  },
+  {
+    "name": "Chris Lee",
+    "position": "Shortstop",
+    "number": "3"
+  },
+  {
+    "name": "Matt Brown",
+    "position": "Outfield",
+    "number": "11"
+  }
+]
