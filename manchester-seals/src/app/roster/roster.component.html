@@ -4,46 +4,105 @@
     <h1>Manchester Seals Baseball</h1>
   </header>
   
-  <!-- MongoDB Data Section -->
-  <section class="mongodb-section">
-    <h2>MongoDB Roster Data</h2>
-    <div class="mongodb-controls">
-      <button class="filter-btn" (click)="loadRosterFromMongoDB()" [disabled]="isLoadingFromMongoDB">
-        {{ isLoadingFromMongoDB ? 'Loading...' : 'Refresh from MongoDB' }}
-      </button>
-      <button class="filter-btn" (click)="filterByPosition('Pitcher')">Pitchers</button>
-      <button class="filter-btn" (click)="filterByPosition('Outfield')">Outfielders</button>
-      <button class="filter-btn" (click)="loadRosterFromMongoDB()">All Players</button>
-    </div>
-    
-    <div *ngIf="isLoadingFromMongoDB" class="loading-message">Loading roster data...</div>
-    
-    <div *ngIf="!isLoadingFromMongoDB && mongoDBPlayers && mongoDBPlayers.length > 0" class="mongodb-table">
-      <table class="roster-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Number</th>
-            <th>MongoDB ID</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let player of mongoDBPlayers">
-            <td>{{ player.name }}</td>
-            <td>{{ player.position }}</td>
-            <td>{{ player.number }}</td>
-            <td class="mongo-id">{{ player._id }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="record-count">Total: {{ mongoDBPlayers.length }} player(s)</p>
-    </div>
-    
-    <div *ngIf="!isLoadingFromMongoDB && (!mongoDBPlayers || mongoDBPlayers.length === 0)" class="no-data-message">
-      No data available. Click "Refresh from MongoDB" to load.
-    </div>
-  </section>
+  <!-- Data Services Grid -->
+  <div class="data-grid">
+    <!-- MongoDB Data Section -->
+    <section class="mongodb-section">
+      <h2>Team Roster (MongoDB)</h2>
+      <div class="mongodb-controls">
+        <button class="filter-btn" (click)="loadRosterFromMongoDB()" [disabled]="isLoadingFromMongoDB">
+          {{ isLoadingFromMongoDB ? 'Loading...' : 'Refresh from MongoDB' }}
+        </button>
+        <button class="filter-btn" (click)="filterByPosition('Pitcher')">Pitchers</button>
+        <button class="filter-btn" (click)="filterByPosition('Outfield')">Outfielders</button>
+        <button class="filter-btn" (click)="loadRosterFromMongoDB()">All Players</button>
+      </div>
+      
+      <div *ngIf="isLoadingFromMongoDB" class="loading-message">Loading roster data...</div>
+      
+      <div *ngIf="!isLoadingFromMongoDB && mongoDBPlayers && mongoDBPlayers.length > 0" class="mongodb-table">
+        <table class="roster-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Position</th>
+              <th>Number</th>
+              <th>MongoDB ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let player of mongoDBPlayers">
+              <td>{{ player.name }}</td>
+              <td>{{ player.position }}</td>
+              <td>{{ player.number }}</td>
+              <td class="mongo-id">{{ player._id }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="record-count">Total: {{ mongoDBPlayers.length }} player(s)</p>
+      </div>
+      
+      <div *ngIf="!isLoadingFromMongoDB && (!mongoDBPlayers || mongoDBPlayers.length === 0)" class="no-data-message">
+        No data available. Click "Refresh from MongoDB" to load.
+      </div>
+    </section>
+
+    <!-- External REST Service Section -->
+    <section class="external-service-section">
+      <h2>Team Roster (rest api: localhost:8080)</h2>
+      
+      <div class="endpoints-info">
+        <strong>Available Endpoints:</strong>
+        <ul>
+          <li><code>/roster</code> - Get all roster data</li>
+          <li><code>/stats</code> - Get team statistics</li>
+          <li><code>/health</code> - Service health check</li>
+          <li><code>/roster/:id</code> - Get specific player by ID</li>
+        </ul>
+      </div>
+      
+      <div class="mongodb-controls">
+        <button class="filter-btn" (click)="loadRosterFromExternal()" [disabled]="isLoadingFromExternal">
+          {{ isLoadingFromExternal ? 'Loading...' : 'Fetch from External Service' }}
+        </button>
+        <input 
+          type="text" 
+          placeholder="/custom/endpoint" 
+          #customEndpoint
+          class="search-input"
+          style="width: 200px; margin-left: 10px;"
+        />
+        <button class="filter-btn" (click)="fetchFromExternal(customEndpoint.value)" [disabled]="isLoadingFromExternal">
+          Fetch Custom Endpoint
+        </button>
+      </div>
+      
+      <div *ngIf="isLoadingFromExternal" class="loading-message">Loading from external service...</div>
+      
+      <div *ngIf="!isLoadingFromExternal && externalPlayers && externalPlayers.length > 0" class="mongodb-table">
+        <table class="roster-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of externalPlayers">
+              <td>
+                <pre>{{ item | json }}</pre>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="record-count">Total: {{ externalPlayers.length }} record(s)</p>
+      </div>
+      
+      <div *ngIf="!isLoadingFromExternal && (!externalPlayers || externalPlayers.length === 0)" class="no-data-message">
+        No data available. Click "Fetch from External Service" to load.
+        <br><small>Make sure a service is running at http://localhost:8080</small>
+      </div>
+    </section>
+  </div>
   
   <!-- Local Data Section -->
   <h2>Team Roster</h2>
