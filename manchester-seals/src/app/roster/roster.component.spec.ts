@@ -22,7 +22,7 @@ describe('RosterComponent', () => {
   });
 
   it('should display player data', () => {
-    expect(component.players.length).toBe(1);
+    expect(component.players.length).toBe(6);
     expect(component.players[0].name).toBe('Joe Hanily');
     expect(component.players[0].position).toBe('Manager');
     expect(component.players[0].number).toBe('20');
