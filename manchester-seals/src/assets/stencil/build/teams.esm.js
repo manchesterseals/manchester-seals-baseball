@@ -1,0 +1,1 @@
+import{p as t,b as e}from"./p-BDteExKh.js";export{s as setNonce}from"./p-BDteExKh.js";import{g as o}from"./p-DQuL1Twl.js";(()=>{const e=import.meta.url,s={};return""!==e&&(s.resourcesUrl=new URL(".",e).href),t(s)})().then((async t=>(await o(),e([["p-e365e8ff",[[1,"teams-component"]]]],t))));

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, NgZone, ApplicationRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone, ApplicationRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PLAYERS } from '../common/config_data';
@@ -16,7 +16,8 @@ interface Player {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './roster.component.html',
-  styleUrl: './roster.component.css'
+  styleUrl: './roster.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RosterComponent implements OnInit {
   players: Player[] = PLAYERS;

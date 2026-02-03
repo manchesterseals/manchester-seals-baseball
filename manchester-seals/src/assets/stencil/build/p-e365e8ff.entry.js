@@ -1,0 +1,1 @@
+export{Teams as teams_component}from"./index.esm.js";import"./p-BDteExKh.js";

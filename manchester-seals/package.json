@@ -8,7 +8,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:manchester-seals": "node dist/manchester-seals/server/server.mjs"
+    "serve:ssr:manchester-seals": "node dist/manchester-seals/server/server.mjs",
+    "build:stencil": "stencil build --config stencil.config.ts"
   },
   "prettier": {
     "printWidth": 100,
@@ -43,6 +44,7 @@
     "@angular/build": "^21.1.2",
     "@angular/cli": "^21.1.2",
     "@angular/compiler-cli": "^21.1.0",
+    "@stencil/core": "^4.33.3",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
     "jsdom": "^27.1.0",
