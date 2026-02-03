@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: '22.12.0'
           cache: 'npm'
+          cache-dependency-path: './manchester-seals/package-lock.json'
 
       - name: Show environment
         run: |
