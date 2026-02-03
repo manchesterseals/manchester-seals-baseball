@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, NgZone, ApplicationRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone, ApplicationRef, CUSTOM_ELEMENTS_SCHEMA, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PLAYERS } from '../common/config_data';
@@ -16,9 +17,11 @@ interface Player {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './roster.component.html',
-  styleUrl: './roster.component.css'
+  styleUrl: './roster.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RosterComponent implements OnInit {
+  private readonly platformId = inject(PLATFORM_ID);
   players: Player[] = PLAYERS;
   isLoadingFromMongoDB = false;
   mongoDBPlayers: RosterEntry[] = [];
@@ -46,7 +49,9 @@ export class RosterComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadRosterFromMongoDB();
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadRosterFromMongoDB();
+    }
   }
 
   /**
